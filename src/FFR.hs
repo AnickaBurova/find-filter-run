@@ -8,15 +8,22 @@ import MatchIt
 import Data.Maybe
 import System.Process
 import System.IO
+import Control.Monad
 
 findFilterRun :: String -> String -> String -> BL.ByteString -> IO ()
-findFilterRun find_pattern filter_pattern run_script =
+findFilterRun find_pattern filter_pattern run_script stream = do
+        when ( anyError compiled_find ) . error $ "Find pattern error " ++ show compiled_find
+        when ( anyError compiled_filter) . error $ "Filter pattern error" ++ show compiled_filter
         mapM_ (run run_script)
-        . filter (not.null)
-        . map (filterIt ( compile filter_pattern ) )
-        . map (findIt ( compile find_pattern ) )
-        . tails
-        . BL.unpack
+            . filter (not.null)
+            . map ( filterIt compiled_filter
+                    . findIt compiled_find )
+            . tails
+            $ BL.unpack stream
+        where
+            compiled_filter = compile filter_pattern
+            compiled_find = compile find_pattern
+
 
 findIt :: [Match] -> [Word8] -> [Word8]
 findIt _ [] = []
