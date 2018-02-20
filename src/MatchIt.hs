@@ -12,6 +12,8 @@ compile :: String -> [Match]
 compile [] = []
 compile ('X':xs) = Any:compile xs
 compile ('x':xs) = Any:compile xs
+compile ('d':x:y:z:xs) = Exact ( read [x,y,z] ) : compile xs
+compile ('o':x:y:z:xs) = Exact (fst . head $ N.readOct [x,y,z]) : compile xs
 compile (x:y:xs) = Exact (fst . head $ N.readHex [x,y]) : compile xs
 compile _ = [Error]
 
@@ -40,5 +42,3 @@ takeUntil m all@(x:xs) =
     if isPrefix m all
         then []
         else x : takeUntil m xs
-
-{-isMatch :: [Match] -> [Word8] -> Bool-}
