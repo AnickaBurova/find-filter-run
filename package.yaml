@@ -23,6 +23,7 @@ dependencies:
 - base >= 4.7 && < 5
 - bytestring
 - utf8-string
+- process
 
 library:
   source-dirs: src
