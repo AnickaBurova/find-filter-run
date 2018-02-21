@@ -9,14 +9,14 @@ import Data.Version (showVersion)
 
 import FFR
 
-data Ffr = Ffr { find :: String, filter :: String, run_script :: String }
-    deriving (Show, Data, Typeable)
+data Ffr = Ffr { find :: String, filter :: String, runScript :: String }
+    deriving (Show, Data)
 
 
 ffr = Ffr
         { find = def &= argPos 0 &= typ "find-pattern"
         , Main.filter = def &= argPos 1 &= typ "filter-pattern"
-        , run_script = def &= argPos 2 &= typ "script file to run on data"}
+        , runScript = def &= argPos 2 &= typ "script-file-to-run-on-data"}
 main :: IO ()
 main = execute =<< cmdArgs ( ffr
             &= help "Finds some pattern, filter it, run something on data there."
